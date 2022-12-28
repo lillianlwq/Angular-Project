@@ -2,7 +2,7 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 14.2.8.
 
-## How to Run
+## How to Run (IMPORTANT!)
 Firstly run
 `npm install`
 which brings back the node_modules folder, then run
