@@ -1,0 +1,74 @@
+
+<div class="container">
+    <br>
+    <div class="border">
+      <br>
+      <div style="text-align: center;">
+        <div *ngIf="showBtns">
+          <button (click)="ableEnterPwd(); clickEditBtn(); toggleBtnField()" class="btn btn-primary">Edit Status</button>
+          <button (click)="ableEnterPwd(); clickDeleteBtn(); toggleBtnField()" class="btn btn-danger">Delete Report</button>
+          <p><small>Need a password* to use these two features</small></p>
+        </div>
+        
+
+        <div *ngIf="!isCorrectPwd && showPwdField">
+          <span class="text-danger">Incorrect/Empty Password</span>
+        </div>
+      
+
+      <div id="enterpwd" *ngIf="showPwdField">
+        <div class="form-control">
+            <legend>Password</legend>
+            <input type="text" name="pwd" id="pwd" class="form-control" (change)="checkPassword($event)">
+            <button (click)="hideEnterPwd()" class="btn btn-outline-success" [disabled]="!isCorrectPwd && showPwdField">OK</button>
+            <br>
+        </div>
+      </div>
+      </div>
+    </div>
+
+  <br>
+    <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="row">Reported By</th>
+        <th scope="row">Phone Number</th>
+        <th scope="row">Pig Breed</th>
+        <th scope="row">Pig ID</th>
+        <th scope="row">Location</th>
+        <th scope="row">Longitude</th>
+        <th scope="row">Latitude</th>
+        <th scope="row">Extra Notes</th>
+        <th scope="row">Created At</th>
+        <th scope="row">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><span>{{showThisOne.data.name}}</span></td>
+            <td><span>{{showThisOne.data.phoneNum}}</span></td>
+            <td><span>{{showThisOne.data.pBrd}}</span></td>
+            <td><span>{{showThisOne.data.pId}}</span></td>
+            <td><span>{{showThisOne.data.locName}}</span></td>
+            <td><span>{{showThisOne.data.locLtd}}</span></td>
+            <td><span>{{showThisOne.data.locLatd}}</span></td>
+            <td><span>{{showThisOne.data.extra}}</span></td>
+            <td><span>{{showThisOne.data.date | date:'yyyy-MM-dd (hh:mma)'}}</span></td>
+            <td>
+                <span *ngIf="showThisOne.data.status">RETRIEVED</span>
+                <span *ngIf="!showThisOne.data.status">READY FOR PICKUP</span>
+            </td>
+        </tr>
+    </tbody>
+  
+  </table>
+
+  <div *ngIf="showSuccessUptMsg">
+    <p style="color:green"><small>The status is updated successfully!</small></p>
+  </div>
+
+  
+</div>
+
+
+

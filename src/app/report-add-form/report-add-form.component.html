@@ -1,0 +1,184 @@
+
+<!-- <button class="btn btn-primary" (click)="passDataToDisplay()"> TESTING</button> -->
+<!-- <button class="btn"><i class="fa fa-home"></i> Home</button>
+<button class="btn"><i class="fa fa-home"></i> Location</button> -->
+
+<div class="container">
+  <div class="border">
+    <div *ngIf="showCreateBtn" style="text-align: center;">
+    <button (click)=
+    "toggleCreateBtn(); toggleForm(); " 
+    class="btn btn-primary" id="createBtn">
+    <i class="bi bi-plus"></i>
+    CREATE PIG REPORT</button>
+    <!-- open(content) -->
+    <p><small>Click table <b>header to sort</b> reports.</small></p>
+    <p><small>The report form will be showing below the table.</small></p>
+  </div>
+<br>
+  <table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col" (click)="sortByLocation()">Location&nbsp;<i class="fa fa-sort"></i></th>
+      <th scope="col" (click)="sortByReporter()">Reported By&nbsp;<i class="fa fa-sort"></i></th>
+      <th scope="col" (click)="sortByTime()">Time Reported&nbsp;<i class="fa fa-sort"></i></th>
+      <th scope="col">Status</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr *ngFor="let report of pigsList">
+          <td><span>{{report.data.locName}}</span></td>
+          <td><span>{{report.data.name}}</span></td>
+          <td><span>{{report.data.date | date:'yyyy-MM-dd (hh:mma)'}}</span></td>
+
+          <td>
+              <span *ngIf="report.data.status">RETRIEVED</span>
+              <span *ngIf="!report.data.status">READY FOR PICKUP</span>
+          </td>
+          <!-- <td><button (click)="confirmToChangeStatus(report)" type="button" class="btn btn-outline-info">Update Status</button> </td> -->
+          <td><button (click)="showMoreInfo(report)" type="button" class="btn btn-outline-info">More Info</button> </td>
+          <!-- <td><button (click)="removeReport(report)" class="btn btn-danger" id="delBtn">Delete</button></td> -->
+      </tr>
+  </tbody>
+
+</table>
+
+</div>
+
+</div>
+
+
+
+<form
+    [formGroup] = "form"
+    (ngSubmit)="onSubmit(form.value)"
+>
+
+<fieldset *ngIf="showForm">
+    <div class="form-group">
+        <br> 
+        <label for="name">Your Name*:</label>
+        <input name="name" id="name" ng-model="name" formControlName="name" type="text" placeholder="John" class="form-control">
+        <span class="text-danger"
+        *ngIf="form.get('name').touched && form.get('name')!.hasError('required')"
+        >Name is required</span>
+    </div>
+    <br>
+
+    <div class="form-group">
+        <label for="phoneNum">Phone Number (10 digits)*:</label><br>
+        <input name="phoneNum" formControlName="phoneNum" ng-model="phoneNum" type="tel" placeholder="0123456789" class="form-control">
+        <span  class="text-danger"
+        *ngIf="(form.get('phoneNum')!.hasError('pattern') || form.get('phoneNum')!.hasError('required'))&&form.get('phoneNum').touched "
+        >Phone numbers must be 10 digits</span>
+    </div>
+    <br>
+
+    <div class="form-group">
+        <label for="pBrd">Pid Breed*:</label><br>
+        <input formControlName="pBrd" type="text" ng-model="pBrd" name="pBrd" placeholder="pork belly" class="form-control">
+        <span class="text-danger"
+        *ngIf="form.get('pBrd').touched && form.get('pBrd')!.hasError('required')"
+        >Pig breed is required</span>
+    </div>
+    <br>
+
+    <div class="form-group">
+        <label for="pId">Pig ID*:</label><br>
+        <input formControlName="pId" type="number" ng-model="pId" name="pId" placeholder="101" class="form-control">
+        <span  class="text-danger"
+        *ngIf="(form.get('pId')!.hasError('pattern') || form.get('pId')!.hasError('required')) && form.get('pId').touched "      
+        >Pig ID can ONLY be postive INTEGER</span>
+    </div>
+    <br>
+    
+    <div class="form-group">
+        <label for="nameLoc">Name of the Place*:</label><br>
+
+        <div class="form-check">
+          <input (change)="toggleShowDropDown(); showEitherOption($event)" type="radio" class="form-check-input" id="radio1" name="optradio" value="option1" checked mdbInput>Choose from existing places
+          <label class="form-check-label" for="radio1"></label>
+        </div>
+        <div class="form-check">
+          <input (change)="toggleShowDropDown(); showEitherOption($event)" type="radio" class="form-check-input" id="radio2" name="optradio" value="option2" checked >Add a new location
+          <label class="form-check-label" for="radio2"></label>
+        </div>
+
+        <br>
+
+        <div *ngIf="showDropDown">
+          <div class="form-group">
+            <label for="chooseLoc">Please Choose one from below:</label>
+            <select class="form-control" id="selectPlace" ng-model="locName" formControlName="locName" (change)="autoFillFields($event)">
+              <option value="-1"> Choose one ...</option>
+              <option *ngFor="let item of putLocNameToForm" [ngValue]="item">{{item}}</option>
+            </select>
+            <!-- <span class="text-danger" *ngIf="!isValidChoice">
+                Please choose a place from the list
+            </span> -->
+           
+          </div>
+        </div>
+
+        <div *ngIf="!showDropDown">
+          <label for="chooseLoc">Please Enter a place:</label>
+          <input type="text" list="allLoc" name="locName" class="form-control" placeholder="Enter a place..." ng-model="locName" formControlName="locName" (keyup)="isAppearInList($event)">
+        </div>
+
+        <span  class="text-danger"
+        *ngIf="form.get('locName')!.hasError('required') && form.get('locName').touched "
+        >Name of the place is required</span>
+    </div>
+    <br>
+    
+    <div class="form-group">
+        <label for="locLtd">Longitude*:</label><br>
+        <input formControlName="locLtd" type="number" ng-model="locLtd" name="locLtd" placeholder="123" class="form-control">
+        <span  class="text-danger"
+        *ngIf="(form.get('locLtd')!.hasError('pattern') || form.get('locLtd')!.hasError('required')) && form.get('locLtd').touched "
+        >Longitude can ONLY be a number(+/-)</span>
+
+        <span class="text-danger" 
+        *ngIf="form.get('locLtd')!.hasError('min') || form.get('locLtd')!.hasError('max') "
+        > Longitude must be between <b>-180 to +180</b>
+        </span>
+    </div>
+    <br>
+
+    <div class="form-group">
+        <label for="locLatd">Latitude*:</label><br>
+        <input formControlName="locLatd" type="number" ng-model="locLatd" name="locLatd" placeholder="50" class="form-control">
+        <span  class="text-danger"
+        *ngIf="(form.get('locLatd')!.hasError('pattern') || form.get('locLatd')!.hasError('required')) && form.get('locLatd').touched "
+        >Latitude can ONLY be a number(+/-)</span>
+
+        <span class="text-danger" 
+        *ngIf="form.get('locLatd')!.hasError('min') || form.get('locLatd')!.hasError('max') "
+        > Latitude must be between <b>-90 to +90</b>
+        </span>
+    </div>
+    <br>
+    
+    <div class="form-group">
+        <label for="extra">Extra notes*:</label><br>
+        <textarea formControlName="extra" ng-model="extra" name="extra" placeholder="under the fountain" class="form-control"></textarea>
+        <span class="text-danger"
+        *ngIf="form.get('extra').touched && form.get('extra')!.hasError('required')" 
+        >Extra notes is required</span>
+    </div>
+    <br>
+
+    <div style="text-align: center;">
+        <button (click)=
+        "onSubmit(form.value); clearInput(); 
+        toggleCreateBtn(); toggleForm(); passDataToDisplay()" 
+        class="btn btn-outline-success" [disabled]="!form.valid">SUBMIT</button>
+
+        <button (click)=
+        "toggleForm(); toggleCreateBtn(); clearInput()" 
+        class="btn btn-light">Cancel</button>
+    </div>
+    
+</fieldset>
+
+</form>

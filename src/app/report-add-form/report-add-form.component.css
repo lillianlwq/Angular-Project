@@ -1,0 +1,13 @@
+fieldset {
+    padding-right: 30%;
+    padding-left: 25%;
+    margin-top: 3%;
+}
+
+.container {
+    margin-top: 3%;
+}
+
+#createBtn {
+    margin-top: 3%;
+}
