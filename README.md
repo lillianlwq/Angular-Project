@@ -2,6 +2,10 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 14.2.8.
 
+## Where is my program?
+
+The main logic is located in `/src/app/`
+
 ## How to Run (IMPORTANT!)
 Firstly run
 `npm install`
